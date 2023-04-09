@@ -19,6 +19,7 @@ import random
 import re
 
 from httplib2 import iri2uri
+from os.path import expanduser
 from variety.plugins.IQuoteSource import IQuoteSource
 from variety.Util import Util, _
 
@@ -118,15 +119,19 @@ KEYWORDS = [
 ]
 
 # blacklists
-AUTHOR_BLACKLIST = [
-    "anuj jasani",
-    "tan seow how",
-    "cecilia chan"
-]
+def load_blacklist(bl_path):
+    """load blacklist file"""
+    full_bl_path = expanduser(bl_path)
+    blacklist = []
+    try:
+        with open(full_bl_path) as bl:
+            blacklist = bl.readlines()
+    except:
+        return []
+    return blacklist
 
-QUOTE_BLACKLIST = [
-    "tripe"
-]
+AUTHOR_BLACKLIST = load_blacklist("~/.config/variety/author-blacklist.txt")
+QUOTE_BLACKLIST = load_blacklist("~/.config/variety/quote-blacklist.txt")
 
 def quote_not_blacklisted(qtext, blacklist):
     """return False if qtext contains member of blacklist"""
