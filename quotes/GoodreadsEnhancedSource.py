@@ -125,7 +125,10 @@ def load_blacklist(bl_path):
     blacklist = []
     try:
         with open(full_bl_path) as bl:
-            blacklist = bl.readlines()
+            blacklist_line = bl.readline().strip().lower()
+            # skip comments / empty lines
+            if (blacklist_line != "") and (blacklist_line[0] != "#"):
+                blacklist.append(blacklist_line)
     except:
         return []
     return blacklist
